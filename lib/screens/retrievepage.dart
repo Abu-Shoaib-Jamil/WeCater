@@ -18,7 +18,7 @@ class _RetrievePageState extends State<RetrievePage> {
             child: Column(
               children: [
                 TextFormField(
-                  decoration: inputfield.copyWith(hintText:"Search",prefixIcon: Icon(Icons.search_rounded),),
+                  decoration: inputfield.copyWith(hintText:"Search",prefixIcon: Icon(Icons.search_rounded),suffixIcon: InkWell(onTap:()async{setState((){_searchvalue="";});},child:Icon(Icons.cancel),),),
                   onChanged: (val){
                     setState((){
                       _searchvalue = val;
@@ -26,7 +26,7 @@ class _RetrievePageState extends State<RetrievePage> {
                   },
                 ),
                 SizedBox(height: 10.0,),
-                CatererListWrapper(searchvalue: _searchvalue,),
+                Expanded(child: CatererListWrapper(searchvalue: _searchvalue,)),
               ],
             ),
           ),
