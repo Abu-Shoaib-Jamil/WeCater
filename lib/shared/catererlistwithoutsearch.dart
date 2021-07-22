@@ -1,13 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class CatererList extends StatefulWidget {
+class CatererListWithoutSearch extends StatefulWidget {
   @override
-  _CatererListState createState() => _CatererListState();
+  _CatererListWithoutSearchState createState() => _CatererListWithoutSearchState();
 }
 
-class _CatererListState extends State<CatererList> {
-
+class _CatererListWithoutSearchState extends State<CatererListWithoutSearch> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -22,7 +21,7 @@ class _CatererListState extends State<CatererList> {
               int _averagerate = doc.get('averagerate');
                 return Card(
                   child: ListTile(
-                    title: Text(_name),
+                    title: Text(_name,style: TextStyle(color:Colors.purple,fontWeight: FontWeight.bold),),
                     subtitle: Text('$_averagerate'),
                   ),
                 );

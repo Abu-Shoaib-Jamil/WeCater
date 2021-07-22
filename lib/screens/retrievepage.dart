@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:listing/shared/catererslist.dart';
+import 'package:listing/shared/catererslistwrapper.dart';
+import 'package:listing/shared/testfield.dart';
 
 class RetrievePage extends StatefulWidget {
   @override
@@ -7,19 +8,28 @@ class RetrievePage extends StatefulWidget {
 }
 
 class _RetrievePageState extends State<RetrievePage> {
+  String _searchvalue="";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children:[
-            Expanded(
-              child:CatererList(),
-            )
-          ]
-        ),
+      body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                TextFormField(
+                  decoration: inputfield.copyWith(hintText:"Search",prefixIcon: Icon(Icons.search_rounded),),
+                  onChanged: (val){
+                    setState((){
+                      _searchvalue = val;
+                    });
+                  },
+                ),
+                SizedBox(height: 10.0,),
+                CatererListWrapper(searchvalue: _searchvalue,),
+              ],
+            ),
+          ),
       ),
     );
   }
