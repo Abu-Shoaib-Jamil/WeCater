@@ -8,6 +8,7 @@ class RetrievePage extends StatefulWidget {
 }
 
 class _RetrievePageState extends State<RetrievePage> {
+  final _searchKey = GlobalKey<FormFieldState>();
   String _searchvalue="";
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,8 @@ class _RetrievePageState extends State<RetrievePage> {
             child: Column(
               children: [
                 TextFormField(
-                  decoration: inputfield.copyWith(hintText:"Search",prefixIcon: Icon(Icons.search_rounded),suffixIcon: InkWell(onTap:()async{setState((){_searchvalue="";});},child:Icon(Icons.cancel),),),
+                  key: _searchKey,
+                  decoration: inputfield.copyWith(hintText:"Search",prefixIcon: Icon(Icons.search_rounded),suffixIcon: InkWell(onTap:()async{_searchKey.currentState!.reset();setState((){_searchvalue="";});},child:Icon(Icons.cancel_outlined),),),
                   onChanged: (val){
                     setState((){
                       _searchvalue = val;
@@ -26,7 +28,7 @@ class _RetrievePageState extends State<RetrievePage> {
                   },
                 ),
                 SizedBox(height: 10.0,),
-                Expanded(child: CatererListWrapper(searchvalue: _searchvalue,)),
+                CatererListWrapper(searchvalue: _searchvalue,),
               ],
             ),
           ),

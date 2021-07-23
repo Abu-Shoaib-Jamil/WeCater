@@ -18,11 +18,11 @@ class _CatererListWithoutSearchState extends State<CatererListWithoutSearch> {
           return ListView(
             children: snapshot.data!.docs.map((doc) {
               String _name = doc.get('caterername');
-              int _averagerate = doc.get('averagerate');
+              var _avrate = doc.get('averagerate');
                 return Card(
                   child: ListTile(
                     title: Text(_name,style: TextStyle(color:Colors.purple,fontWeight: FontWeight.bold),),
-                    subtitle: Text('$_averagerate'),
+                    subtitle: Text("$_avrate"),
                   ),
                 );
               }).toList(),

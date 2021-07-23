@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:listing/screens/listpage.dart';
+import 'package:listing/screens/loginpage.dart';
 import 'package:listing/screens/retrievepage.dart';
+import 'package:listing/screens/signinsignoutwrapper.dart';
 
 void main()async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,10 +16,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/listpage',
+      initialRoute: '/',
       routes: {
+        '/':(context)=>SignInSignOutWrapper(),
         '/listpage':(context)=>ListPage(),
         '/retrievepage':(context)=>RetrievePage(),
+        '/loginpage':(context)=>LoginPage(),
       },
     );
   }

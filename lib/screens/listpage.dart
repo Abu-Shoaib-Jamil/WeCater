@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:listing/service/authservice.dart';
 import 'package:listing/shared/testfield.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,8 +11,8 @@ class ListPage extends StatefulWidget {
 
 class _ListPageState extends State<ListPage> {
   final _listKey = GlobalKey<FormState>();
-  late String _catname,_serve,_streetno,_streetname,_district,_pincode,_state="West Bengal",_specialitem,_contact;
-  late int _foodrate=2,_hygienerate=2;
+  late String _catname,_serve,_streetno,_streetname,_district,_pincode,_state,_specialitem,_contact;
+  late int _foodrate,_hygienerate;
   Future _uploadData()async{
     try{
       var _uid = Uuid().v1();
@@ -87,17 +88,18 @@ class _ListPageState extends State<ListPage> {
                           },
                         ),
                         SizedBox(height: 15.0,),
+                        //Serve and Street number
                         Row(
                           children: [
                             Expanded(
                                 flex:1,
                                 //Serve
                                 child: TextFormField(
-                                decoration: inputfield.copyWith(labelText:"Serve"),
+                                decoration: inputfield.copyWith(labelText:"Serve(veg/nonveg/both)"),
                                 validator: (val){
                                   if(val!.isEmpty){
                                     return "Enter Serve";
-                                  }else if(val.length<3 || val.length>5){
+                                  }else if(val.length>=3 && val.length<=5){
                                     return "Enter veg/nonveg/both";
                                   }else{
                                     return null;
@@ -137,6 +139,7 @@ class _ListPageState extends State<ListPage> {
                           },
                         ),
                         SizedBox(height: 15.0,),
+                        //District and Pincode
                         Row(
                           children: [
                             //District
@@ -196,12 +199,13 @@ class _ListPageState extends State<ListPage> {
                           },
                         ),
                         SizedBox(height: 15.0,),
+                        //FoodRating and HygieneRating
                         Row(
                           children: [
                             Expanded(
                               flex:1,
                               child: TextFormField(
-                                decoration: inputfield.copyWith(labelText:"Food Rating(By Default:2)"),
+                                decoration: inputfield.copyWith(labelText:"Food Quality Rating"),
                                 onChanged: (val){
                                   setState((){
                                     _foodrate = val as int;
@@ -214,7 +218,7 @@ class _ListPageState extends State<ListPage> {
                             Expanded(
                               flex:1,
                               child: TextFormField(
-                                decoration: inputfield.copyWith(labelText:"Hygiene Rating(By Default:2)"),
+                                decoration: inputfield.copyWith(labelText:"Hygiene Rating"),
                                 onChanged: (val){
                                   setState((){
                                     _hygienerate = val as int;
@@ -230,36 +234,49 @@ class _ListPageState extends State<ListPage> {
                 ),
               ),
             ),
-            //Upload and Retrieve Button
+            //Upload, Retrieve adn Logout Button
             Expanded(
               flex: 1,
               child:Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  //Upload Data
-                  ElevatedButton(
-                    onPressed: ()async{
-                      //Firestore upload and show snackbar once done or error while uploading
-                      if(_listKey.currentState!.validate()){
-                        _listKey.currentState!.reset();
-                        var _result = await _uploadData();
-                        if(_result=='success'){
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.green,content:Text("Successfully Uploaded",style: TextStyle(color:Colors.white),),),);
-                        }else{
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.red,content:Text("$_result",style: TextStyle(color:Colors.white),),),);
-                        }
-                      }
-                    },
-                    child: Text("Upload"),
+                  //Upload and Retreive Button
+                  Row(
+                    children: [
+                      //Upload Data
+                      ElevatedButton(
+                        onPressed: ()async{
+                          //Firestore upload and show snackbar once done or error while uploading
+                          if(_listKey.currentState!.validate()){
+                            _listKey.currentState!.reset();
+                            var _result = await _uploadData();
+                            if(_result=='success'){
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.green,content:Text("Successfully Uploaded",style: TextStyle(color:Colors.white),),),);
+                            }else{
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.red,content:Text("$_result",style: TextStyle(color:Colors.white),),),);
+                            }
+                          }
+                        },
+                        child: Text("Upload"),
+                      ),
+                      SizedBox(width:20.0),
+                      //Retrieve
+                      ElevatedButton(
+                        onPressed: (){
+                          Navigator.pushNamed(context, '/retrievepage');
+                        },
+                        child: Text("Retrieve"),
+                      ),
+                    ],
                   ),
-                  SizedBox(width: 20.0,),
-                  //Retrieve
-                  ElevatedButton(
-                    onPressed: (){
-                      Navigator.pushNamed(context, '/retrievepage');
+                  //Logout
+                  TextButton(
+                    onPressed: ()async{
+                      await Authentication().logout();
                     },
-                    child: Text("Retrieve"),
+                    
+                    child: Text("Logout",style: TextStyle(color: Colors.red),),
                   ),
                 ],
               ),
