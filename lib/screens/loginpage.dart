@@ -21,6 +21,8 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                //WeCater
+                Text("WeCater MasterApp"),
                 //Email
                 TextFormField(
                   decoration: InputDecoration(
