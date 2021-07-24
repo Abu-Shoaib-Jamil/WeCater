@@ -21,9 +21,16 @@ class _CatererListWithoutSearchState extends State<CatererListWithoutSearch> {
               var _avrate = doc.get('averagerate');
               String _address  = doc.get('address');
               String _contact = doc.get('contact');
+              String _docid = doc.id;
                 return Card(
                   child: ListTile(
-                    title: Text(_name,style: TextStyle(color:Colors.purple,fontWeight: FontWeight.bold),),
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(_name,style: TextStyle(color:Colors.purple,fontWeight: FontWeight.bold),),
+                        Text(_docid,style: TextStyle(color:Colors.grey[850]),),
+                      ],
+                    ),
                     subtitle: Text("Average Rating : $_avrate\nAddress : $_address\nContact : $_contact"),
                   ),
                 );
