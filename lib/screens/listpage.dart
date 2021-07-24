@@ -228,6 +228,15 @@ class _ListPageState extends State<ListPage> {
                               flex:1,
                               child: TextFormField(
                                 decoration: inputfield.copyWith(labelText:"Food Quality Rating(>=0 & <5)"),
+                                validator: (val){
+                                  if(val!.isEmpty){
+                                    return "Enter Food Quality Rating";
+                                  }else if(int.parse(val)>6 && int.parse(val)<0){
+                                    return "0 <= Rating <= 5";
+                                  }else{
+                                    return null;
+                                  }
+                                },
                                 onChanged:(val){
                                   setState((){
                                     _foodrate = int.parse(val);
@@ -241,6 +250,15 @@ class _ListPageState extends State<ListPage> {
                               flex:1,
                               child: TextFormField(
                                 decoration: inputfield.copyWith(labelText:"Hygiene Rating(>=0 & <5)"),
+                                validator: (val){
+                                  if(val!.isEmpty){
+                                    return "Enter Hygiene Rating";
+                                  }else if(int.parse(val)>6 && int.parse(val)<0){
+                                    return "0 <= Rating <= 5";
+                                  }else{
+                                    return null;
+                                  }
+                                },
                                 onChanged:(val){
                                   setState((){
                                     _hygienerate = int.parse(val);
