@@ -99,7 +99,7 @@ class _ListPageState extends State<ListPage> {
                                 validator: (val){
                                   if(val!.isEmpty){
                                     return "Enter Serve";
-                                  }else if(val.length>=3 && val.length<=5){
+                                  }else if(val.length<3 || val.length>6){
                                     return "Enter veg/nonveg/both";
                                   }else{
                                     return null;
@@ -161,7 +161,15 @@ class _ListPageState extends State<ListPage> {
                                 flex:1,
                                 child: TextFormField(
                                 decoration: inputfield.copyWith(labelText:"Pincode"),
-                                validator: (val)=>(val!.isEmpty)?"Enter Pincode":null,
+                                validator: (val){
+                                  if(val!.isEmpty){
+                                    return "Enter pincode";
+                                  }else if(val.length!=6){
+                                    return "Pincode must be of length 6";
+                                  }else{
+                                    return null;
+                                  }
+                                },
                                 onChanged: (val){
                                   setState((){
                                     _pincode = val;
@@ -174,14 +182,27 @@ class _ListPageState extends State<ListPage> {
                         SizedBox(height: 15.0,),
                         //State
                         TextFormField(
-                          decoration: inputfield.copyWith(labelText:"State(West Bengal by default)"),
+                          decoration: inputfield.copyWith(labelText:"State"),
                           validator: (val)=>(val!.isEmpty)?"Enter State":null,
+                          onChanged: (val){
+                            setState((){
+                              _state = val;
+                            });
+                          },
                         ),
                         SizedBox(height: 15.0,),
                         //Contact
                         TextFormField(
                           decoration: inputfield.copyWith(labelText:"Contact"),
-                          validator: (val)=>(val!.isEmpty)?"Enter contact number":null,
+                          validator: (val){
+                            if(val!.isEmpty){
+                              return "Enter Contact";
+                            }else if(val.length!=10){
+                              return "Wrong Contact";
+                            }else{
+                              return null;
+                            }
+                          },
                           onChanged: (val){
                             setState((){
                               _contact = val;
@@ -202,28 +223,29 @@ class _ListPageState extends State<ListPage> {
                         //FoodRating and HygieneRating
                         Row(
                           children: [
+                            //Food Quality Rating
                             Expanded(
                               flex:1,
                               child: TextFormField(
-                                decoration: inputfield.copyWith(labelText:"Food Quality Rating"),
-                                onChanged: (val){
+                                decoration: inputfield.copyWith(labelText:"Food Quality Rating(>=0 & <5)"),
+                                onChanged:(val){
                                   setState((){
-                                    _foodrate = val as int;
+                                    _foodrate = int.parse(val);
                                   });
-                                },
+                                }
                               ),
                             ),
                             SizedBox(width: 5.0,),
-                            //Pincode
+                            //Hygiene Rating
                             Expanded(
                               flex:1,
                               child: TextFormField(
-                                decoration: inputfield.copyWith(labelText:"Hygiene Rating"),
-                                onChanged: (val){
+                                decoration: inputfield.copyWith(labelText:"Hygiene Rating(>=0 & <5)"),
+                                onChanged:(val){
                                   setState((){
-                                    _hygienerate = val as int;
+                                    _hygienerate = int.parse(val);
                                   });
-                                },
+                                }
                               ),
                             ),
                           ],
@@ -249,9 +271,10 @@ class _ListPageState extends State<ListPage> {
                         onPressed: ()async{
                           //Firestore upload and show snackbar once done or error while uploading
                           if(_listKey.currentState!.validate()){
-                            _listKey.currentState!.reset();
+                            print((_foodrate+_hygienerate)/2);
                             var _result = await _uploadData();
                             if(_result=='success'){
+                               _listKey.currentState!.reset();
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.green,content:Text("Successfully Uploaded",style: TextStyle(color:Colors.white),),),);
                             }else{
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.red,content:Text("$_result",style: TextStyle(color:Colors.white),),),);
@@ -275,7 +298,6 @@ class _ListPageState extends State<ListPage> {
                     onPressed: ()async{
                       await Authentication().logout();
                     },
-                    
                     child: Text("Logout",style: TextStyle(color: Colors.red),),
                   ),
                 ],
