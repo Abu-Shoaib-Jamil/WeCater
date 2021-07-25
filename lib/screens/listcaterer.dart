@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:listing/service/authservice.dart';
 import 'package:listing/shared/testfield.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ListPage extends StatefulWidget {
+class ListCaterer extends StatefulWidget {
   @override
-  _ListPageState createState() => _ListPageState();
+  _ListCatererState createState() => _ListCatererState();
 }
 
-class _ListPageState extends State<ListPage> {
+class _ListCatererState extends State<ListCaterer> {
   final _listKey = GlobalKey<FormState>();
   late String _catname,_serve,_streetno,_streetname,_district,_pincode,_state,_specialitem,_contact;
   late int _foodrate,_hygienerate;
@@ -44,21 +43,6 @@ class _ListPageState extends State<ListPage> {
           mainAxisAlignment:MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            //WeCater Logo
-            Expanded(
-              flex: 1,
-              child:Wrap(
-                  runAlignment: WrapAlignment.center,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  direction: Axis.horizontal,
-                  spacing:20.0,
-                  children: [
-                    CircleAvatar(backgroundColor: Colors.purple[900],backgroundImage:AssetImage("asset/logo.png"),radius:35.0),
-                    Text("WeCater",style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold,)
-                    ,),
-                  ],
-              ),
-            ),
             //Listing Form
             Expanded(
               flex:4,
@@ -274,51 +258,25 @@ class _ListPageState extends State<ListPage> {
                 ),
               ),
             ),
-            //Upload, Retrieve adn Logout Button
+            //Upload Button
             Expanded(
               flex: 1,
-              child:Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  //Upload and Retreive Button
-                  Row(
-                    children: [
-                      //Upload Data
-                      ElevatedButton(
-                        onPressed: ()async{
-                          //Firestore upload and show snackbar once done or error while uploading
-                          if(_listKey.currentState!.validate()){
-                            print((_foodrate+_hygienerate)/2);
-                            var _result = await _uploadData();
-                            if(_result=='success'){
-                               _listKey.currentState!.reset();
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.green,content:Text("Successfully Uploaded",style: TextStyle(color:Colors.white),),),);
-                            }else{
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.red,content:Text("$_result",style: TextStyle(color:Colors.white),),),);
-                            }
-                          }
-                        },
-                        child: Text("Upload"),
-                      ),
-                      SizedBox(width:20.0),
-                      //Retrieve
-                      ElevatedButton(
-                        onPressed: (){
-                          Navigator.pushNamed(context, '/retrievepage');
-                        },
-                        child: Text("Retrieve"),
-                      ),
-                    ],
-                  ),
-                  //Logout
-                  TextButton(
+              child:Center(
+                child:ElevatedButton(
                     onPressed: ()async{
-                      await Authentication().logout();
+                      //Firestore upload and show snackbar once done or error while uploading
+                      if(_listKey.currentState!.validate()){
+                        var _result = await _uploadData();
+                        if(_result=='success'){
+                           _listKey.currentState!.reset();
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.green,content:Text("Successfully Uploaded",style: TextStyle(color:Colors.white),),),);
+                        }else{
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.red,content:Text("$_result",style: TextStyle(color:Colors.white),),),);
+                        }
+                      }
                     },
-                    child: Text("Logout",style: TextStyle(color: Colors.red),),
+                    child: Text("Upload"),
                   ),
-                ],
               ),
             ),
           ],

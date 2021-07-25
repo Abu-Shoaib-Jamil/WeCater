@@ -24,14 +24,8 @@ class _CatererListWithoutSearchState extends State<CatererListWithoutSearch> {
               String _docid = doc.id;
                 return Card(
                   child: ListTile(
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(_name,style: TextStyle(color:Colors.purple,fontWeight: FontWeight.bold),),
-                        Text(_docid,style: TextStyle(color:Colors.grey[850]),),
-                      ],
-                    ),
-                    subtitle: Text("Average Rating : $_avrate\nAddress : $_address\nContact : $_contact"),
+                    title: Text(_name,style: TextStyle(color:Colors.purple,fontWeight: FontWeight.bold),),
+                    subtitle: Text("DocID : $_docid\nAverage Rating : $_avrate\nAddress : $_address\nContact : $_contact"),
                   ),
                 );
               }).toList(),

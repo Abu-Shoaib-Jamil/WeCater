@@ -1,33 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class CatererListWithSearch extends StatefulWidget {
+class BanquetListWithSearch extends StatefulWidget {
   final String searchvalue;
-  CatererListWithSearch({required this.searchvalue});
+  BanquetListWithSearch({required this.searchvalue});
   @override
-  _CatererListWithSearchState createState() => _CatererListWithSearchState();
+  _BanquetListWithSearchState createState() => _BanquetListWithSearchState();
 }
 
-class _CatererListWithSearchState extends State<CatererListWithSearch> {
+class _BanquetListWithSearchState extends State<BanquetListWithSearch> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('caterer-record').where('caterername',isEqualTo: widget.searchvalue).snapshots(),
+      stream: FirebaseFirestore.instance.collection('banquet-record').where('banquetname',isEqualTo: widget.searchvalue).snapshots(),
       builder: (context,snapshot){
         if(!snapshot.hasData){
           return Center(child:CircularProgressIndicator());
         }else{
           return ListView(
             children: snapshot.data!.docs.map((doc) {
-              String _name = doc.get('caterername');
-              var _avrate = doc.get('averagerate');
+              String _name = doc.get('banquetname');
+              var _hygienerate = doc.get('hygienerate');
               String _address  = doc.get('address');
               String _contact = doc.get('contact');
               String _docid = doc.id;
                 return Card(
                   child: ListTile(
                     title: Text(_name,style: TextStyle(color:Colors.purple,fontWeight: FontWeight.bold),),
-                    subtitle: Text("DocID : $_docid\nAverage Rating : $_avrate\nAddress : $_address\nContact : $_contact"),
+                    subtitle: Text("DocID : $_docid\nHygiene : $_hygienerate\nAddress : $_address\nContact : $_contact"),
                   ),
                 );
               }).toList(),

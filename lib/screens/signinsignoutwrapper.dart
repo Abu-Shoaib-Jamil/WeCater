@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:listing/screens/listpage.dart';
+import 'package:listing/screens/homepage.dart';
 import 'package:listing/screens/loginpage.dart';
 
 class SignInSignOutWrapper extends StatefulWidget {
@@ -17,7 +17,7 @@ class _SignInSignOutWrapperState extends State<SignInSignOutWrapper> {
         if(!snapshot.hasData){
           return LoginPage();
         }else{
-          return ListPage();
+          return Homepage();
         }
       }
     );

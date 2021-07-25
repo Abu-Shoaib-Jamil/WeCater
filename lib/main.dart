@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:listing/screens/listpage.dart';
+import 'package:listing/screens/listcaterer.dart';
 import 'package:listing/screens/loginpage.dart';
 import 'package:listing/screens/retrievepage.dart';
 import 'package:listing/screens/signinsignoutwrapper.dart';
+import 'package:listing/screens/uploadassets.dart';
 
 void main()async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,9 +20,10 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/':(context)=>SignInSignOutWrapper(),
-        '/listpage':(context)=>ListPage(),
+        '/listpage':(context)=>ListCaterer(),
         '/retrievepage':(context)=>RetrievePage(),
         '/loginpage':(context)=>LoginPage(),
+        '/assetupload':(context)=>UploadAsset(),
       },
     );
   }
