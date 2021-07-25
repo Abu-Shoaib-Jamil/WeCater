@@ -13,8 +13,7 @@ class CatererBanquetListWrapper extends StatefulWidget {
 class _CatererBanquetListWrapperState extends State<CatererBanquetListWrapper> {
   @override
   Widget build(BuildContext context) {
-    print("\n\n" + widget.dropdownvalue.toString());
-    print(widget.searchvalue);
+
     if(widget.dropdownvalue=="Caterer"){
       return CatererListWrapper(searchvalue: widget.searchvalue);
     }else{
