@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:clipboard/clipboard.dart';
 
 class BanquetListWithSearch extends StatefulWidget {
   final String searchvalue;
@@ -24,10 +25,22 @@ class _BanquetListWithSearchState extends State<BanquetListWithSearch> {
               String _address  = doc.get('address');
               String _contact = doc.get('contact');
               String _docid = doc.id;
-                return Card(
-                  child: ListTile(
-                    title: Text(_name,style: TextStyle(color:Colors.purple,fontWeight: FontWeight.bold),),
-                    subtitle: Text("DocID : $_docid\nHygiene : $_hygienerate\nAddress : $_address\nContact : $_contact"),
+                return InkWell(
+                  onTap: ()async{
+                    await FlutterClipboard.copy(_docid);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Copied to clipboard"),),);
+                  },
+                  child: Card(
+                    child: ListTile(
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(_name,style: TextStyle(color:Colors.purple,fontWeight: FontWeight.bold),),
+                          Icon(Icons.content_copy),
+                        ],
+                      ),
+                      subtitle: Text("DocID : $_docid\nHygiene : $_hygienerate\nAddress : $_address\nContact : $_contact"),
+                    ),
                   ),
                 );
               }).toList(),

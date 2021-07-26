@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         '/listpage':(context)=>ListCaterer(),
         '/retrievepage':(context)=>RetrievePage(),
         '/loginpage':(context)=>LoginPage(),
-        '/assetupload':(context)=>UploadAsset(),
+        '/uploadasset':(context)=>UploadAsset(),
       },
     );
   }

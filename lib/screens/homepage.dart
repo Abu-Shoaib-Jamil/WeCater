@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:listing/screens/listbanquet.dart';
 import 'package:listing/screens/listcaterer.dart';
 import 'package:listing/screens/retrievepage.dart';
+import 'package:listing/screens/uploadassets.dart';
 import 'package:listing/service/authservice.dart';
 
 
@@ -16,6 +17,7 @@ class _HomepageState extends State<Homepage> {
   var _pages = [
     ListCaterer(),
     ListBanquet(),
+    UploadAsset(),
     RetrievePage(),
   ];
   @override
@@ -66,6 +68,10 @@ class _HomepageState extends State<Homepage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home_rounded),
             label: "Banquets",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add),
+            label: "Asset",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.download),
