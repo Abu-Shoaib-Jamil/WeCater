@@ -131,7 +131,7 @@ class _UploadAssetState extends State<UploadAsset> {
                     try{
                       if(_docIdKey.currentState!.validate()){
                         String _filename = "${DateTime.now()}";
-                        //Upload to Firbase cloud storage
+                        //Upload to Firbase cloud storage and set the downloadUrl to Firestore.
                         await FirebaseStorage.instance.ref("$docId/images/$_filename").putFile(_file).whenComplete(()async{
                           String _downloadUrl = await FirebaseStorage.instance.ref("$docId/images/$_filename").getDownloadURL();
                           //Upload its link to Firestore
