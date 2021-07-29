@@ -135,9 +135,9 @@ class _UploadAssetState extends State<UploadAsset> {
                         await FirebaseStorage.instance.ref("$docId/images/$_filename").putFile(_file).whenComplete(()async{
                           String _downloadUrl = await FirebaseStorage.instance.ref("$docId/images/$_filename").getDownloadURL();
                           //Upload its link to Firestore
-                          await FirebaseFirestore.instance.collection("$_dropdownvalue-record").doc(docId).update({
-                            'images':{'$_filename': '$_downloadUrl',},
-                          });
+                          await FirebaseFirestore.instance.collection("$_dropdownvalue-record").doc(docId).set({
+                            'images':{'img-$_filename': '$_downloadUrl',},
+                          },SetOptions(merge:true));
                           _docIdKey.currentState!.reset();
                           setState((){
                             image=null;
@@ -150,7 +150,10 @@ class _UploadAssetState extends State<UploadAsset> {
                     }on FirebaseException catch(e){
                       if(e.code=='unauthorized'){
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("ImageSize<=100KB / VideoSize<=2MB"),),);
-                      }else{
+                      }else if(e.code=='no-object'){
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Wrong location set.Check if the value is Banquet or Caterer"),),);
+                      }
+                      else{
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.code),),);
                       }
                     }
