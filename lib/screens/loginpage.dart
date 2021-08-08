@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:wecater/shareditems/loadingscreen.dart';
 import 'package:wecater/services/authservice.dart';
 import 'package:wecater/shareditems/inputfield.dart';
 
@@ -184,7 +183,7 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                 ),
-                  ),
+              ),
             ),
             // FutureBuilder(future: ,builder: builder),
             //SignUp Button

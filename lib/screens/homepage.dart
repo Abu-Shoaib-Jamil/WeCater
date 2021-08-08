@@ -11,19 +11,7 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  // User? user;
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   getUser();
-  // }
-  // Future getUser()async{
-  //   User? _user = FirebaseAuth.instance.currentUser;
-  //   setState(() {
-  //     user = _user;
-  //   });
-  // }
-  int _currentIndex = 1;
+  int _currentIndex = 0;
   final PageController _pageController = PageController();
   var _pages = [
     CatererPage(),
@@ -59,6 +47,7 @@ class _HomepageState extends State<Homepage> {
       ),
       body: PageView(
         controller: _pageController,
+        
         children: _pages,
         onPageChanged: (index){
           setState((){
@@ -72,12 +61,12 @@ class _HomepageState extends State<Homepage> {
         backgroundColor: Colors.white70,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_rounded),
-            label: "Banquets",
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.cake_rounded),
             label: "Caterers",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_rounded),
+            label: "Banquets",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.local_offer_rounded),
