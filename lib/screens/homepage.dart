@@ -24,33 +24,16 @@ class _HomepageState extends State<Homepage> {
     _pageController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0.0,
-        leading: CircleAvatar(
-          backgroundImage:AssetImage("asset/logo.png"),radius: 10.0,backgroundColor: Colors.white,
-        ),
-        title: Text("WeCater",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black),),
-        actions: [
-          TextButton.icon(
-            onPressed: ()async{
-              await Authentication().logout();
-            },
-            icon: Icon(Icons.exit_to_app,color: Colors.black),
-            label: Text("Logout",style: TextStyle(color: Colors.black),),
-          ),
-        ],
-      ),
       body: PageView(
         controller: _pageController,
-        
         children: _pages,
-        onPageChanged: (index){
-          setState((){
+        onPageChanged: (index) {
+          setState(() {
             _currentIndex = index;
           });
         },
@@ -58,7 +41,8 @@ class _HomepageState extends State<Homepage> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white70,
+        backgroundColor: Color.fromRGBO(66, 32, 87, 1),
+        fixedColor: Colors.white,
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.cake_rounded),
@@ -77,10 +61,11 @@ class _HomepageState extends State<Homepage> {
             label: "Profile",
           ),
         ],
-        onTap: (index){
-          setState((){
+        onTap: (index) {
+          setState(() {
             _currentIndex = index;
-            _pageController.animateToPage(_currentIndex, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+            _pageController.animateToPage(_currentIndex,
+                duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
           });
         },
       ),

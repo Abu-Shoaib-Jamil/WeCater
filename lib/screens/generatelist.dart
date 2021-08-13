@@ -4,105 +4,271 @@ import 'package:geocoding/geocoding.dart';
 import 'package:wecater/screens/detailpage.dart';
 import 'package:geolocator/geolocator.dart';
 
+// ignore: must_be_immutable
 class GenerateList extends StatefulWidget {
-  String? colname,serve;
-  double userlat,userlong;
-  GenerateList({required this.serve,required this.colname,required this.userlat,required this.userlong});
+  String? colname, serve;
+  double userlat, userlong;
+  GenerateList(
+      {required this.serve,
+      required this.colname,
+      required this.userlat,
+      required this.userlong});
   @override
   _GenerateListState createState() => _GenerateListState();
 }
 
 class _GenerateListState extends State<GenerateList> {
-  var _distance = 0;
-  Future getDistance(String address)async{
+  Future getDistance(String address) async {
     List<Location> _loc = await locationFromAddress(address);
-    var _dist =Geolocator.distanceBetween(widget.userlat, widget.userlong, _loc.first.latitude, _loc.first.longitude);
-    setState(() {
-      _distance = _dist as int;
-    });
+    var _dist = Geolocator.distanceBetween(widget.userlat, widget.userlong,
+        _loc.first.latitude, _loc.first.longitude);
+    return _dist.ceil();
   }
+
   @override
   Widget build(BuildContext context) {
-      return FutureBuilder<QuerySnapshot>(
-      future: FirebaseFirestore.instance.collection('${widget.colname}'+'-record').orderBy('averagerate',descending: true).where('serve',isEqualTo:widget.serve).get(),
-      builder: (context,snapshot){
-        if(!snapshot.hasData){
-          return Center(child:CircularProgressIndicator(),);
-        }else{
-          return ListView(
-            children: snapshot.data!.docs.map((doc){
-              String _name = doc.get('name');
-              double _avrate = doc.get('averagerate');
-              String _cataddress = doc.get('address');
-              getDistance(_cataddress);
-              String _docid = doc.id;
-              if( (widget.userlat==0 && widget.userlong==0) || ( (widget.userlat!=0&&widget.userlong!=0) && (_distance<=10000) ) ){
-                return InkWell(
-                  onTap: ()async{
-                    Navigator.push(context, MaterialPageRoute(builder:(context)=>DetailPage(docId: _docid, colname: widget.colname.toString()),),);
-                  },
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          //Image Section
-                          Expanded(
-                            flex: 2,
-                            child: Container(
-                              clipBehavior: Clip.hardEdge,
-                              decoration: BoxDecoration(
-                                image:DecorationImage(
-                                  image: NetworkImage("https://content3.jdmagicbox.com/def_content/caterers/default-caterers-7.jpg?clr=47331f"),
-                                  fit: BoxFit.fill,
-                                  repeat: ImageRepeat.noRepeat,
+    if (widget.colname == 'caterer') {
+      return StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('caterer-record')
+              .orderBy('averagerate', descending: true)
+              .where('serve', isEqualTo: widget.serve)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return SliverToBoxAdapter(
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            } else {
+              return SliverList(
+                delegate: SliverChildListDelegate(
+                  snapshot.data!.docs.map((doc) {
+                    String _name = doc.get('name');
+                    var _avrate = doc.get('averagerate');
+                    var _serve = doc.get('serve');
+                    String _docid = doc.id;
+                    if (widget.userlat == 0 && widget.userlong == 0) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: InkWell(
+                          onTap: () async {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetailPage(
+                                    docId: _docid,
+                                    colname: widget.colname.toString()),
+                              ),
+                            );
+                          },
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(100.0),
+                                bottomLeft: Radius.circular(100.0),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  backgroundImage:
+                                      AssetImage("asset/caterer.jpg"),
+                                  radius: 25.0,
+                                ),
+                                title: Text(
+                                  "$_name",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 24.0,
                                   ),
+                                ),
+                                subtitle: Text("$_serve"),
+                                trailing: Wrap(
+                                  spacing: 5.0,
+                                  children: [
+                                    Text(
+                                      "$_avrate",
+                                      style: TextStyle(fontSize: 18.0),
+                                    ),
+                                    Icon(
+                                      Icons.stars,
+                                      color: Colors.amberAccent,
+                                      size: 18.0,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                          //Detail section
-                          Expanded(
-                            flex: 4,
-                            child: Wrap(
-                              direction: Axis.vertical,
-                              crossAxisAlignment: WrapCrossAlignment.start,
-                              spacing: 10.0,
-                              children: [
-                                Text("$_name",style: TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold),),
-                                Text("$_distance"),
-                              ],
+                        ),
+                      );
+                    } else if (widget.userlat != 0 && widget.userlong != 0) {
+                      var _distance;
+                      getDistance(doc.get('address'))
+                          .then((value) => _distance = value);
+                      print(_distance);
+                      if (_distance <= 10000) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: InkWell(
+                            onTap: () async {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetailPage(
+                                      docId: _docid,
+                                      colname: widget.colname.toString()),
+                                ),
+                              );
+                            },
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(100.0),
+                                  bottomLeft: Radius.circular(100.0),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ListTile(
+                                  leading: CircleAvatar(
+                                    backgroundImage:
+                                        AssetImage("asset/caterer.jpg"),
+                                    radius: 25.0,
+                                  ),
+                                  title: Text(
+                                    "$_name",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24.0,
+                                    ),
+                                  ),
+                                  subtitle: Text("$_serve"),
+                                  trailing: Wrap(
+                                    spacing: 5.0,
+                                    children: [
+                                      Text(
+                                        "$_avrate",
+                                        style: TextStyle(fontSize: 18.0),
+                                      ),
+                                      Icon(
+                                        Icons.stars,
+                                        color: Colors.amberAccent,
+                                        size: 18.0,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                          //Rating section
-                          Expanded(
-                            flex: 1,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Wrap(
+                        );
+                      } else {
+                        return Container();
+                      }
+                    } else {
+                      return Container();
+                    }
+                  }).toList(),
+                ),
+              );
+            }
+          });
+    } else {
+      return StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('banquet-record')
+              .orderBy('averagerate', descending: true)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return SliverToBoxAdapter(
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            } else {
+              return SliverList(
+                delegate: SliverChildListDelegate(
+                  snapshot.data!.docs.map((doc) {
+                    var _distance;
+                    String _name = doc.get('name');
+                    var _avrate = doc.get('averagerate');
+                    String _banqaddress = doc.get('address');
+                    getDistance(_banqaddress).then((value) {
+                      _distance = value;
+                      print("$_distance");
+                    });
+                    String _docid = doc.id;
+                    if ((widget.userlat == 0 && widget.userlong == 0) ||
+                        ((widget.userlat != 0 && widget.userlong != 0) &&
+                            (_distance <= 100))) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: InkWell(
+                          onTap: () async {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetailPage(
+                                    docId: _docid,
+                                    colname: widget.colname.toString()),
+                              ),
+                            );
+                          },
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(100.0),
+                                bottomLeft: Radius.circular(100.0),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  backgroundImage:
+                                      AssetImage("asset/banquet.jpg"),
+                                  radius: 25.0,
+                                ),
+                                title: Text(
+                                  "$_name",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 24.0,
+                                  ),
+                                ),
+                                subtitle: Text("$_banqaddress"),
+                                trailing: Wrap(
                                   spacing: 5.0,
                                   children: [
-                                    Text("$_avrate",style: TextStyle(fontSize:18.0),),
-                                    Icon(Icons.stars,color:Colors.amberAccent,size: 18.0,),
+                                    Text(
+                                      "$_avrate",
+                                      style: TextStyle(fontSize: 18.0),
+                                    ),
+                                    Icon(
+                                      Icons.stars,
+                                      color: Colors.amberAccent,
+                                      size: 18.0,
+                                    ),
                                   ],
                                 ),
-                              ],
+                              ),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-            }else{
-              return Container();
+                        ),
+                      );
+                    } else {
+                      return Container();
+                    }
+                  }).toList(),
+                ),
+              );
             }
-              }).toList(),
-          );
-        }
-      }
-    );
+          });
+    }
   }
 }
