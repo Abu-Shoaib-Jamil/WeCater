@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -8,8 +9,14 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text("Profile Page"),
+    return Scaffold(
+      body: SafeArea(
+          child: MaterialButton(
+        onPressed: () async {
+          FirebaseCrashlytics.instance.crash();
+        },
+        child: Text("Crash"),
+      )),
     );
   }
 }

@@ -5,10 +5,12 @@ import 'package:wecater/screens/loginpage.dart';
 import 'package:wecater/screens/signinsignoutwrapper.dart';
 import 'package:wecater/screens/signuppage.dart';
 import 'package:wecater/screens/splashscreen.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   runApp(MyApp());
 }
 

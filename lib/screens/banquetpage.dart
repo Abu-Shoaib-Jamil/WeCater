@@ -36,7 +36,10 @@ class _BanquetPageState extends State<BanquetPage> {
             backgroundColor: Color.fromRGBO(66, 32, 87, 1),
             stretch: true,
             automaticallyImplyLeading: false,
-            title: Text("WeCater", style: TextStyle(color: Colors.white)),
+            title: Text(
+              "WeCater",
+              style: TextStyle(color: Colors.black),
+            ),
             centerTitle: true,
             floating: true,
             snap: true,

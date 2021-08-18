@@ -33,6 +33,10 @@ dependencies:
   table_calendar: ^3.0.1
   geolocator: ^7.4.0
   geocoding: ^2.0.0
+  firebase_crashlytics: ^2.1.1
+  video_player: ^2.1.13
+  firebase_performance: ^0.7.0+7
+  flutter_rating_bar: ^4.0.0
 
 dev_dependencies:
   flutter_test:

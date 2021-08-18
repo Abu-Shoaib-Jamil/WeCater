@@ -194,18 +194,11 @@ class _GenerateListState extends State<GenerateList> {
               return SliverList(
                 delegate: SliverChildListDelegate(
                   snapshot.data!.docs.map((doc) {
-                    var _distance;
                     String _name = doc.get('name');
                     var _avrate = doc.get('averagerate');
                     String _banqaddress = doc.get('address');
-                    getDistance(_banqaddress).then((value) {
-                      _distance = value;
-                      print("$_distance");
-                    });
                     String _docid = doc.id;
-                    if ((widget.userlat == 0 && widget.userlong == 0) ||
-                        ((widget.userlat != 0 && widget.userlong != 0) &&
-                            (_distance <= 100))) {
+                    if (widget.userlat == 0 && widget.userlong == 0) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: InkWell(
@@ -261,6 +254,70 @@ class _GenerateListState extends State<GenerateList> {
                           ),
                         ),
                       );
+                    } else if (widget.userlat != 0 && widget.userlong != 0) {
+                      var _distance;
+                      getDistance(_banqaddress).then((value) {
+                        _distance = value;
+                      });
+                      if (_distance <= 10000) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: InkWell(
+                            onTap: () async {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetailPage(
+                                      docId: _docid,
+                                      colname: widget.colname.toString()),
+                                ),
+                              );
+                            },
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(100.0),
+                                  bottomLeft: Radius.circular(100.0),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ListTile(
+                                  leading: CircleAvatar(
+                                    backgroundImage:
+                                        AssetImage("asset/banquet.jpg"),
+                                    radius: 25.0,
+                                  ),
+                                  title: Text(
+                                    "$_name",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24.0,
+                                    ),
+                                  ),
+                                  subtitle: Text("$_banqaddress"),
+                                  trailing: Wrap(
+                                    spacing: 5.0,
+                                    children: [
+                                      Text(
+                                        "$_avrate",
+                                        style: TextStyle(fontSize: 18.0),
+                                      ),
+                                      Icon(
+                                        Icons.stars,
+                                        color: Colors.amberAccent,
+                                        size: 18.0,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Container();
+                      }
                     } else {
                       return Container();
                     }
