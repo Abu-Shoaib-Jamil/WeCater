@@ -12,6 +12,8 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
+  bool _isbookmarked = false;
+  bool _isfavourite = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,111 +34,164 @@ class _DetailPageState extends State<DetailPage> {
                 int _foodrate = snapshot.data!.get('foodrate');
                 int _hygienerate = snapshot.data!.get('hygienerate');
                 String _specialitem = snapshot.data!.get('specialitem');
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    //Video Section
-                    Expanded(
-                      flex: 1,
-                      child: VideoWidget(),
-                    ),
-                    //Image Section
-                    //Detail Section
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          //Profile Photo, Name Section and Like Button and bookmark icon.
-                          Expanded(
-                            flex: 1,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                return Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: Stack(
+                    children: [
+                      //Video Section
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        child: Container(
+                          height: MediaQuery.of(context).size.height / 4,
+                          width: MediaQuery.of(context).size.width,
+                          child: VideoWidget(),
+                        ),
+                      ),
+                      //Profile Picture
+                      Positioned(
+                        left: 30.0,
+                        top: MediaQuery.of(context).size.height / 4.5,
+                        child: CircleAvatar(
+                          foregroundImage: AssetImage("asset/profile.jpg"),
+                          radius: 40.0,
+                        ),
+                      ),
+                      //Name
+                      Positioned(
+                        top: MediaQuery.of(context).size.height / 3.8,
+                        left: 120,
+                        child: Text(
+                          "$_name",
+                          style: TextStyle(
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      //Bookmark and Like button
+                      Positioned(
+                        right: 20.0,
+                        top: MediaQuery.of(context).size.height / 3.8,
+                        child: Wrap(
+                          spacing: 5.0,
+                          alignment: WrapAlignment.center,
+                          children: [
+                            //Bookmark button
+                            InkWell(
+                              onTap: () async {
+                                if (!_isbookmarked) {
+                                  setState(() {
+                                    _isbookmarked = !_isbookmarked;
+                                  });
+                                } else {
+                                  setState(() {
+                                    _isbookmarked = !_isbookmarked;
+                                  });
+                                }
+                              },
+                              child: Icon(
+                                Icons.bookmark,
+                                color:
+                                    (_isbookmarked) ? Colors.blue : Colors.grey,
+                              ),
+                            ),
+                            //Like button
+                            Wrap(
+                              direction: Axis.vertical,
+                              spacing: 2.0,
                               children: [
-                                //Profile Photo
-                                Expanded(
-                                  flex: 1,
-                                  child: CircleAvatar(
-                                    foregroundImage:
-                                        AssetImage("asset/profile.jpg"),
-                                    radius: 30.0,
+                                InkWell(
+                                  onTap: () async {
+                                    if (!_isfavourite) {
+                                      setState(() {
+                                        _isfavourite = !_isfavourite;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        _isfavourite = !_isfavourite;
+                                      });
+                                    }
+                                  },
+                                  child: Icon(
+                                    Icons.favorite_rounded,
+                                    color: (_isfavourite)
+                                        ? Colors.red
+                                        : Colors.grey,
                                   ),
                                 ),
-                                //Name Section
-                                Expanded(
-                                  flex: 3,
-                                  child: Text(
-                                    "$_name",
+                                Text("4.3k"),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      //Other Dtails of the caterer
+                      Positioned(
+                        top: MediaQuery.of(context).size.height / 3.2,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Wrap(
+                            direction: Axis.vertical,
+                            children: [
+                              //Intro about the caterers
+                              Text(
+                                  "This caterer has been around for more than 15 years in this industry, when it comes to taste and quality of the food there is no competition Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."),
+                              SizedBox(
+                                height: 20.0,
+                              ),
+                              //FoodRating
+                              Wrap(
+                                alignment: WrapAlignment.start,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                spacing: 5.0,
+                                children: [
+                                  Text(
+                                    "Food Quality : ",
                                     style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 24.0,
+                                      fontStyle: FontStyle.italic,
                                     ),
                                   ),
-                                ),
-                                //Bookmark and like button
-                                Expanded(
-                                  flex: 1,
-                                  child: Wrap(
-                                    spacing: 5.0,
-                                    alignment: WrapAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.bookmark,
-                                      ),
-                                      Icon(
-                                        Icons.favorite_rounded,
-                                      ),
-                                    ],
+                                  StarRating(
+                                    rating: _foodrate.toDouble(),
                                   ),
-                                )
-                              ],
-                            ),
-                          ),
-                          //Ratings
-                          Expanded(
-                            flex: 1,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                //Food Rating
-                                Expanded(
-                                  flex: 1,
-                                  child: Wrap(
-                                    spacing: 5.0,
-                                    children: [
-                                      Text("Food Quality : $_foodrate"),
-                                      StarRating(rating: _foodrate.toDouble()),
-                                    ],
+                                ],
+                              ),
+                              SizedBox(
+                                height: 20.0,
+                              ),
+                              //HygieneRating
+                              Wrap(
+                                alignment: WrapAlignment.start,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                spacing: 5.0,
+                                children: [
+                                  Text(
+                                    "Hygiene : ",
+                                    style: TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                    ),
                                   ),
-                                ),
-                                //Hygiene Rating
-                                Expanded(
-                                  flex: 1,
-                                  child: Wrap(
-                                    spacing: 5.0,
-                                    children: [
-                                      Text("Hygiene: $_hygienerate"),
-                                      StarRating(
-                                          rating: _hygienerate.toDouble()),
-                                    ],
+                                  StarRating(
+                                    rating: _hygienerate.toDouble(),
                                   ),
-                                ),
-                              ],
-                            ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 20.0,
+                              ),
+                              //Special item
+                              Text("Special Item : $_specialitem"),
+                              SizedBox(
+                                height: 20.0,
+                              ),
+                            ],
                           ),
-                          //Special Item
-                          Expanded(
-                            flex: 1,
-                            child: Text("Spacial Item : $_specialitem"),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                        ),
+                      )
+                    ],
+                  ),
                 );
               } else {
                 String _name = snapshot.data!.get('name');
@@ -159,3 +214,97 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 }
+
+// Column(
+//                   mainAxisAlignment: MainAxisAlignment.start,
+//                   crossAxisAlignment: CrossAxisAlignment.center,
+//                   children: [
+//                     //Video Section
+//                     VideoWidget(),
+//                     //Image Section
+//                     SizedBox(
+//                       height: 20.0,
+//                     ),
+//                     //Detail Section
+//                     Column(
+//                       mainAxisAlignment: MainAxisAlignment.start,
+//                       crossAxisAlignment: CrossAxisAlignment.start,
+//                       children: [
+//                         //Profile Photo, Name Section and Like Button and bookmark icon.
+//                         Row(
+//                           mainAxisAlignment: MainAxisAlignment.start,
+//                           crossAxisAlignment: CrossAxisAlignment.start,
+//                           children: [
+//                             //Profile Photo
+//                             Expanded(
+//                               flex: 1,
+//                               child: CircleAvatar(
+//                                 foregroundImage:
+//                                     AssetImage("asset/profile.jpg"),
+//                                 radius: 20.0,
+//                               ),
+//                             ),
+//                             //Name Section
+//                             Expanded(
+//                               flex: 3,
+//                               child: Text(
+//                                 "$_name",
+//                                 style: TextStyle(
+//                                   fontWeight: FontWeight.bold,
+//                                   fontSize: 24.0,
+//                                 ),
+//                               ),
+//                             ),
+//                             //Bookmark and like button
+//                             Expanded(
+//                               flex: 1,
+//                               child: Wrap(
+//                                 spacing: 5.0,
+//                                 alignment: WrapAlignment.center,
+//                                 children: [
+//                                   Icon(
+//                                     Icons.bookmark,
+//                                   ),
+//                                   Icon(
+//                                     Icons.favorite_rounded,
+//                                   ),
+//                                 ],
+//                               ),
+//                             )
+//                           ],
+//                         ),
+//                         SizedBox(
+//                           height: 20.0,
+//                         ),
+//                         //Food Rating
+//                         Wrap(
+//                           spacing: 5.0,
+//                           children: [
+//                             Text("Food Quality : "),
+//                             StarRating(
+//                               rating: _foodrate.toDouble(),
+//                             ),
+//                           ],
+//                         ),
+//                         SizedBox(
+//                           height: 5.0,
+//                         ),
+//                         //Hygiene Rating
+//                         Wrap(
+//                           spacing: 5.0,
+//                           children: [
+//                             Text("Hygiene: "),
+//                             StarRating(
+//                               rating: _hygienerate.toDouble(),
+//                             ),
+//                           ],
+//                         ),
+//                         SizedBox(
+//                           height: 20.0,
+//                         ),
+//                         //Special Item
+//                         Text("Special Item : $_specialitem"),
+//                       ],
+//                     ),
+//                   ],
+//                 );

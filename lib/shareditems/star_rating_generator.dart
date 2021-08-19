@@ -18,6 +18,7 @@ class _StarRatingState extends State<StarRating> {
       direction: Axis.horizontal,
       allowHalfRating: true,
       ignoreGestures: true,
+      itemSize: 35.0,
       itemCount: 5,
       itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
       itemBuilder: (context, _) => Icon(
