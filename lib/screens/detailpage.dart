@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:wecater/shareditems/star_rating_generator.dart';
@@ -14,6 +15,55 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   bool _isbookmarked = false;
   bool _isfavourite = false;
+  Future bookmark() async {
+    await FirebaseFirestore.instance
+        .collection("user-record")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .set(
+      {
+        "bookmarks": FieldValue.arrayUnion([widget.docId]),
+      },
+      SetOptions(
+        merge: true,
+      ),
+    );
+  }
+
+  Future removebookmark() async {
+    await FirebaseFirestore.instance
+        .collection("user-record")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .set(
+      {
+        "bookmarks": FieldValue.arrayRemove([widget.docId])
+      },
+      SetOptions(
+        merge: true,
+      ),
+    );
+  }
+
+  Future checkbookmark() async {
+    await FirebaseFirestore.instance
+        .collection("user-record")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then((value) {
+      List bookmarkarray = value.get("bookmarks");
+      if (bookmarkarray.contains(widget.docId)) {
+        setState(() {
+          _isbookmarked = true;
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    checkbookmark();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,10 +135,12 @@ class _DetailPageState extends State<DetailPage> {
                                   setState(() {
                                     _isbookmarked = !_isbookmarked;
                                   });
+                                  await bookmark();
                                 } else {
                                   setState(() {
                                     _isbookmarked = !_isbookmarked;
                                   });
+                                  await removebookmark();
                                 }
                               },
                               child: Icon(
@@ -133,13 +185,12 @@ class _DetailPageState extends State<DetailPage> {
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Wrap(
+                            spacing: 10.0,
                             direction: Axis.vertical,
                             children: [
                               //Intro about the caterers
                               Text(
-                                  "This caterer has been around for more than 15 years in this industry, when it comes to taste and quality of the food there is no competition Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."),
-                              SizedBox(
-                                height: 20.0,
+                                "This caterer has been around for more than 15 years in this industry, when it comes to taste and quality of the food there is no competition Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
                               ),
                               //FoodRating
                               Wrap(
@@ -158,9 +209,6 @@ class _DetailPageState extends State<DetailPage> {
                                   ),
                                 ],
                               ),
-                              SizedBox(
-                                height: 20.0,
-                              ),
                               //HygieneRating
                               Wrap(
                                 alignment: WrapAlignment.start,
@@ -178,14 +226,8 @@ class _DetailPageState extends State<DetailPage> {
                                   ),
                                 ],
                               ),
-                              SizedBox(
-                                height: 20.0,
-                              ),
                               //Special item
                               Text("Special Item : $_specialitem"),
-                              SizedBox(
-                                height: 20.0,
-                              ),
                             ],
                           ),
                         ),

@@ -11,12 +11,21 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: MaterialButton(
-        onPressed: () async {
-          FirebaseCrashlytics.instance.crash();
-        },
-        child: Text("Crash"),
-      )),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ListTile(
+                title: Text("Bookmarks"),
+                onTap: () async {
+                  Navigator.pushNamed(context, '/bookmarkspage');
+                },
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

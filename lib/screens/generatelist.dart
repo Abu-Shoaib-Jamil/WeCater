@@ -167,10 +167,10 @@ class _GenerateListState extends State<GenerateList> {
                           ),
                         );
                       } else {
-                        return Container();
+                        return SliverToBoxAdapter(child: Container());
                       }
                     } else {
-                      return Container();
+                      return SliverToBoxAdapter(child: Container());
                     }
                   }).toList(),
                 ),

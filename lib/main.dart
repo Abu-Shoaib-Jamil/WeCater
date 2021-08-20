@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
         '/catererpage': (context) => CatererPage(),
         '/signuppage': (context) => SignUpPage(),
         '/loginpage': (context) => LoginPage(),
+        '/bookmarkspage': (context) => BookmarksPage(),
       },
     );
   }
