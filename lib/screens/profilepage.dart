@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:wecater/screens/bookmarkspage.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -13,15 +13,47 @@ class _ProfilePageState extends State<ProfilePage> {
       body: SafeArea(
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ListTile(
-                title: Text("Bookmarks"),
-                onTap: () async {
-                  Navigator.pushNamed(context, '/bookmarkspage');
-                },
-              )
+              ExpansionTile(
+                title: Text(
+                  "Bookmarks",
+                  textAlign: TextAlign.center,
+                ),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(32.0),
+                    child: ListTile(
+                      title: Text("Caterer"),
+                      onTap: () async {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                BookmarksPage(colname: "caterer"),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(32.0),
+                    child: ListTile(
+                      title: Text("Banquets"),
+                      onTap: () async {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                BookmarksPage(colname: "banquet"),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

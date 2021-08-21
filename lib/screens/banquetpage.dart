@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wecater/screens/generatelist.dart';
+import 'package:wecater/services/generatelist.dart';
 import 'package:wecater/services/getlocation.dart';
 import 'package:wecater/shareditems/inputfield.dart';
 
