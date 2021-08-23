@@ -58,6 +58,42 @@ class _DetailPageState extends State<DetailPage> {
     });
   }
 
+  Future like() async {
+    DocumentReference _docRef = FirebaseFirestore.instance
+        .collection("${widget.colname}-record")
+        .doc(widget.docId);
+    await FirebaseFirestore.instance
+        .runTransaction((transaction) async {
+          DocumentSnapshot snapshot = await transaction.get(_docRef);
+          if (!snapshot.exists) {
+            throw Exception("User does not exist!");
+          }
+          int _likes = snapshot.get('likes') + 1;
+          transaction.update(_docRef, {'likes': _likes});
+          return _likes;
+        })
+        .then((value) => print("Like upvoted to $value"))
+        .catchError((error) => print("Falied to update due to $error"));
+  }
+
+  Future unlike() async {
+    DocumentReference _docRef = FirebaseFirestore.instance
+        .collection("${widget.colname}-record")
+        .doc(widget.docId);
+    await FirebaseFirestore.instance
+        .runTransaction((transaction) async {
+          DocumentSnapshot _docSnap = await transaction.get(_docRef);
+          if (!_docSnap.exists) {
+            throw Exception("User does not exist!");
+          }
+          int _likes = _docSnap.get('likes') - 1;
+          transaction.update(_docRef, {'likes': _likes});
+          return _likes;
+        })
+        .then((value) => print("Like upvoted to : $value"))
+        .catchError((error) => print("Falied to update due to $error"));
+  }
+
   @override
   void initState() {
     checkbookmark();
@@ -68,11 +104,11 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: FutureBuilder<DocumentSnapshot>(
-          future: FirebaseFirestore.instance
+        child: StreamBuilder<DocumentSnapshot>(
+          stream: FirebaseFirestore.instance
               .collection("${widget.colname}" + "-record")
               .doc(widget.docId)
-              .get(),
+              .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Center(
@@ -84,6 +120,7 @@ class _DetailPageState extends State<DetailPage> {
                 int _foodrate = snapshot.data!.get('foodrate');
                 int _hygienerate = snapshot.data!.get('hygienerate');
                 String _specialitem = snapshot.data!.get('specialitem');
+                int _likes = snapshot.data!.get('likes');
                 return Container(
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
@@ -160,10 +197,12 @@ class _DetailPageState extends State<DetailPage> {
                                       setState(() {
                                         _isfavourite = !_isfavourite;
                                       });
+                                      await like();
                                     } else {
                                       setState(() {
                                         _isfavourite = !_isfavourite;
                                       });
+                                      await unlike();
                                     }
                                   },
                                   child: Icon(
@@ -173,7 +212,7 @@ class _DetailPageState extends State<DetailPage> {
                                         : Colors.grey,
                                   ),
                                 ),
-                                Text("4.3k"),
+                                Text("$_likes"),
                               ],
                             ),
                           ],
@@ -256,97 +295,3 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 }
-
-// Column(
-//                   mainAxisAlignment: MainAxisAlignment.start,
-//                   crossAxisAlignment: CrossAxisAlignment.center,
-//                   children: [
-//                     //Video Section
-//                     VideoWidget(),
-//                     //Image Section
-//                     SizedBox(
-//                       height: 20.0,
-//                     ),
-//                     //Detail Section
-//                     Column(
-//                       mainAxisAlignment: MainAxisAlignment.start,
-//                       crossAxisAlignment: CrossAxisAlignment.start,
-//                       children: [
-//                         //Profile Photo, Name Section and Like Button and bookmark icon.
-//                         Row(
-//                           mainAxisAlignment: MainAxisAlignment.start,
-//                           crossAxisAlignment: CrossAxisAlignment.start,
-//                           children: [
-//                             //Profile Photo
-//                             Expanded(
-//                               flex: 1,
-//                               child: CircleAvatar(
-//                                 foregroundImage:
-//                                     AssetImage("asset/profile.jpg"),
-//                                 radius: 20.0,
-//                               ),
-//                             ),
-//                             //Name Section
-//                             Expanded(
-//                               flex: 3,
-//                               child: Text(
-//                                 "$_name",
-//                                 style: TextStyle(
-//                                   fontWeight: FontWeight.bold,
-//                                   fontSize: 24.0,
-//                                 ),
-//                               ),
-//                             ),
-//                             //Bookmark and like button
-//                             Expanded(
-//                               flex: 1,
-//                               child: Wrap(
-//                                 spacing: 5.0,
-//                                 alignment: WrapAlignment.center,
-//                                 children: [
-//                                   Icon(
-//                                     Icons.bookmark,
-//                                   ),
-//                                   Icon(
-//                                     Icons.favorite_rounded,
-//                                   ),
-//                                 ],
-//                               ),
-//                             )
-//                           ],
-//                         ),
-//                         SizedBox(
-//                           height: 20.0,
-//                         ),
-//                         //Food Rating
-//                         Wrap(
-//                           spacing: 5.0,
-//                           children: [
-//                             Text("Food Quality : "),
-//                             StarRating(
-//                               rating: _foodrate.toDouble(),
-//                             ),
-//                           ],
-//                         ),
-//                         SizedBox(
-//                           height: 5.0,
-//                         ),
-//                         //Hygiene Rating
-//                         Wrap(
-//                           spacing: 5.0,
-//                           children: [
-//                             Text("Hygiene: "),
-//                             StarRating(
-//                               rating: _hygienerate.toDouble(),
-//                             ),
-//                           ],
-//                         ),
-//                         SizedBox(
-//                           height: 20.0,
-//                         ),
-//                         //Special Item
-//                         Text("Special Item : $_specialitem"),
-//                       ],
-//                     ),
-//                   ],
-//                 );
