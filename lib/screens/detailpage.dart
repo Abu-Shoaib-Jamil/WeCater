@@ -94,9 +94,25 @@ class _DetailPageState extends State<DetailPage> {
         .catchError((error) => print("Falied to update due to $error"));
   }
 
+  Future checklike() async {
+    await FirebaseFirestore.instance
+        .collection("user-record")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then((value) {
+      List likesarray = value.get("likes");
+      if (likesarray.contains(widget.docId)) {
+        setState(() {
+          _isfavourite = true;
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
     checkbookmark();
+    checklike();
     super.initState();
   }
 
@@ -193,16 +209,16 @@ class _DetailPageState extends State<DetailPage> {
                               children: [
                                 InkWell(
                                   onTap: () async {
+                                    await like();
                                     if (!_isfavourite) {
                                       setState(() {
                                         _isfavourite = !_isfavourite;
                                       });
-                                      await like();
                                     } else {
+                                      await unlike();
                                       setState(() {
                                         _isfavourite = !_isfavourite;
                                       });
-                                      await unlike();
                                     }
                                   },
                                   child: Icon(
