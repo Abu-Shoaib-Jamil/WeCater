@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:listing/shared/testfield.dart';
-import 'package:uuid/uuid.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ListCaterer extends StatefulWidget {
@@ -32,10 +31,7 @@ class _ListCatererState extends State<ListCaterer> {
 
   Future _uploadData() async {
     try {
-      await FirebaseFirestore.instance
-          .collection('caterer-record')
-          .doc()
-          .set({
+      await FirebaseFirestore.instance.collection('caterer-record').doc().set({
         'name': _catname,
         'serve': _serve,
         'streetnumber': _streetno,
