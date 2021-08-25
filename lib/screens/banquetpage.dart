@@ -11,7 +11,9 @@ class BanquetPage extends StatefulWidget {
 class _BanquetPageState extends State<BanquetPage> {
   String? _locdropvalue = "Any Location";
   String? _servedropvalue = "both";
+  String _searchvalue = "";
   double _userlat = 0, _userlong = 0;
+  final _searchKey = GlobalKey<FormFieldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +25,24 @@ class _BanquetPageState extends State<BanquetPage> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
                 child: TextFormField(
-                  decoration: inputdeco.copyWith(hintText: "Search Banquets"),
+                  key: _searchKey,
+                  decoration: inputdeco.copyWith(
+                    hintText: "Search Banquets",
+                    suffixIcon: InkWell(
+                      onTap: () async {
+                        _searchKey.currentState!.reset();
+                        setState(() {
+                          _searchvalue = "";
+                        });
+                      },
+                      child: Icon(Icons.cancel_outlined),
+                    ),
+                  ),
+                  onChanged: (val) {
+                    setState(() {
+                      _searchvalue = val;
+                    });
+                  },
                 ),
               ),
               preferredSize: Size.fromHeight(73.0),
@@ -122,6 +141,7 @@ class _BanquetPageState extends State<BanquetPage> {
             sliver: GenerateList(
               serve: _servedropvalue,
               colname: "banquet",
+              searchvalue: _searchvalue,
               userlat: _userlat,
               userlong: _userlong,
             ),
