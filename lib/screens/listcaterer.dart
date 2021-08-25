@@ -32,10 +32,9 @@ class _ListCatererState extends State<ListCaterer> {
 
   Future _uploadData() async {
     try {
-      var _uid = Uuid().v1();
       await FirebaseFirestore.instance
           .collection('caterer-record')
-          .doc(_uid)
+          .doc()
           .set({
         'name': _catname,
         'serve': _serve,

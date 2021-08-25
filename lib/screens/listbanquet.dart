@@ -30,11 +30,7 @@ class _ListBanquetState extends State<ListBanquet> {
 
   Future _uploadData() async {
     try {
-      var _uid = Uuid().v1();
-      await FirebaseFirestore.instance
-          .collection('banquet-record')
-          .doc(_uid)
-          .set({
+      await FirebaseFirestore.instance.collection('banquet-record').doc().set({
         'name': _banqname,
         'streetnumber': _streetno,
         'streetname': _streetname,
